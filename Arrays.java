@@ -1,3 +1,7 @@
+// A subarray is a contiguous segment of an array.
+// A subsequence is a set of elements maintaining their order, but they don't have to be adjacent.
+
+
 // 344. Reverse String - leetcode
 // 01 -  TC is O(N)/2 and SC is constant
 class Solution {
@@ -88,4 +92,74 @@ class Solution {
         }
         return max;
     }
+}
+
+
+// Count pairs with given sum - GFG
+// TC is O(n) and SC is also O(n)
+class Solution {
+    int getPairsCount(int[] arr, int n, int k) {
+        // code here
+        int cnt = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<n; i++){
+            int num = arr[i];
+            if(map.containsKey(k-num)){
+                cnt += map.get(k-num);
+            }
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        return cnt;
+    }
+}
+
+// Subarray with 0 sum - GFG
+class Solution{
+    //Function to check whether there is a subarray present with 0-sum or not.
+    static boolean findsum(int arr[],int n)
+    {
+        //Your code here
+        Set<Integer> sums = new HashSet<>();
+        int sum =0;
+        for(int i=0; i<n; i++){
+            sum += arr[i];
+            if(sums.contains(sum) || arr[i]==0 || sum==0) return true;
+            sums.add(sum);
+        }
+        return false;
+    }
+}
+
+// 1. Two Sum - leetcode
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<nums.length; i++){
+            if(map.containsKey(target-nums[i])){
+                return new int[]{map.get(target-nums[i]), i};
+            }
+            map.put(nums[i],i);
+        }
+        return new int[]{-1,-1};
+    }
+}
+
+// 42. Trapping Rain Water - leetcode
+public int trap(int[] height) {
+    int n = height.length;
+    int[] leftMax = new int[n];
+    int[] rightMax = new int[n];
+    leftMax[0] = height[0];
+    rightMax[n-1] = height[n-1];
+    for(int i=1; i<n; i++){
+        leftMax[i] = Math.max(leftMax[i-1],height[i]);
+    }
+    for(int i=n-2; i>=0; i--){
+        rightMax[i] = Math.max(rightMax[i+1],height[i]);
+    }
+    int cnt = 0;
+    for(int i=0; i<n; i++){
+        cnt += Math.min(leftMax[i],rightMax[i]) - height[i];
+    }
+    return cnt;
 }
