@@ -163,3 +163,96 @@ public int trap(int[] height) {
     }
     return cnt;
 }
+
+// 128. Longest Consecutive Sequence
+
+public int longestConsecutive(int[] nums) {
+        int n = nums.length;
+        Set<Integer> set = new HashSet<>();
+        for(int i=0; i<n; i++){
+            set.add(nums[i]);
+        }
+        int max = 0;
+        int cnt = 0;
+        for(int i: set){
+            if(!set.contains(i-1)){
+                cnt++;
+                while(set.contains(++i)){
+                    cnt++;
+                    // set.remove(i);
+                }
+                max = Math.max(cnt, max);
+                cnt  = 0;
+            }
+        }
+        return max;
+}
+
+
+// 209. Minimum Size Subarray Sum - leetcode
+// TC is O(n) - in worst case cur will visit all the elements and prev will also visit all the elements
+// O(2n) -> O(n)
+public int minSubArrayLen(int target, int[] nums) {
+        int prev = 0, cur = 0, min = Integer.MAX_VALUE;
+        int n = nums.length, sum = 0;
+        while(cur<=n){
+            if(sum < target){
+                if(cur==n) break;
+                sum += nums[cur];
+                cur++;
+            }
+            while(sum>=target){
+                min = Math.min(min, cur-prev);
+                sum -= nums[prev];
+                prev++;
+            }
+        }
+        if(min == Integer.MAX_VALUE) min=0;
+        return min;
+}
+
+// 4. Median of Two Sorted Arrays - leetcode
+// the time complexity of this solution is O(n + m), where "n" and "m" are the lengths of the input arrays nums1 and nums2, respectively.
+class Solution {
+    private double getMedian(int[] arr, int n){
+        if(n == 0) return 0.0d;
+        if(n==1) return arr[n-1];
+        if(n%2==0){
+            return (double) (arr[n/2]+arr[(n/2)-1])/2;
+        }else{
+            return (double) arr[n/2];
+        }
+    }
+
+    private int[] merge(int[] n1, int[] n2){
+        int n = n1.length, m = n2.length;
+        int[] res = new int[n + m];
+        int i=0, j=0, k=0;
+        while(i<n && j<m){
+            if(n1[i] < n2[j]){
+                res[k] = n1[i];
+                i++;
+            }else{
+                res[k] = n2[j];
+                j++;
+            }
+            k++;
+        }
+        while(i<n) {
+            res[k] = n1[i];
+            k++;
+            i++;
+        }
+        while(j<m) {
+            res[k] = n2[j];
+            k++;
+            j++;
+        }
+        return res;
+    }
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int[] merged = merge(nums1, nums2);
+        return getMedian(merged, merged.length);
+    }
+}
